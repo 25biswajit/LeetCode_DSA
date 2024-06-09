@@ -4,7 +4,7 @@ class Solution {
         count = 0;
         int s = 0, e = nums.length - 1;
         mergeSort(nums, s, e);
-        return count/2;
+        return count;
     }
 
     private void mergeSort(int[] a, int s, int e){
@@ -39,7 +39,7 @@ class Solution {
 
     private void countReservePair(int[] a, int s, int m, int e){
         int j = m + 1;
-        for(int i = s; i <= e; i++){
+        for(int i = s; i <= m; i++){
             while(j <= e && a[i] > (2L * a[j])) j++;
             count += j - (m+1);
         }
