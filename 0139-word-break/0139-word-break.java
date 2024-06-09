@@ -14,14 +14,12 @@ class Solution {
             String substring = s.substring(0, i);
             String rest = s.substring(i);
             if( dic.contains(substring) && wordBreak(rest, dic, dp)){
-                dp.put(s, true);
                 result = true;
                 break;
-            }else{
-                dp.put(s, false);
             }
         }
-        return dp.get(s);
+        dp.put(s, result);
+        return result;
     }
 
 }
