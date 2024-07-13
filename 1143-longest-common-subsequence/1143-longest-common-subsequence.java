@@ -1,24 +1,23 @@
 class Solution {
+    int[][] dp = null;
+    int result = 0;
     public int longestCommonSubsequence(String text1, String text2) {
-        int n = text1.length();
-        int m = text2.length();
-        int dp[][] = new int[n+1][m+1];
-        Arrays.stream(dp).forEach(a -> Arrays.fill(a, -1));
-        return lcs(0, 0, n, m, text1, text2, dp);
+        int m = text1.length();
+        int n = text2.length();
+        dp = new int[m+1][n+1];
+        Arrays.stream(dp).forEach(d -> Arrays.fill(d,-1));
+        return lcs(text1, m, text2, n, 0, 0);
     }
 
-    private int lcs(int i, int j, int n, int m, String s1, String s2, int dp[][]){
-        if(i >= n || j>= m) return 0;
-        if(dp[i][j] != -1) return dp[i][j]; 
-        int res = 0;
+    private int lcs(String s1, int m, String s2, int n, int i, int j){
+        if(i >= m || j >= n) return 0;
+        if(dp[i][j] != -1) return dp[i][j];
         if(s1.charAt(i) == s2.charAt(j)){
-            res = 1 + lcs(i+1, j+1, n, m, s1, s2, dp);
+            dp[i][j] = 1 + lcs(s1,m,s2,n,i+1,j+1);
         }
         else{
-            int option1 = lcs(i+1, j, n, m, s1, s2, dp);
-            int option2 = lcs(i, j+1, n, m, s1, s2, dp);
-            res = Integer.max(option1, option2);
+            dp[i][j] = Integer.max( lcs(s1,m,s2,n,i+1,j) , lcs(s1,m,s2,n,i,j+1));
         }
-        return dp[i][j] = res;
+        return dp[i][j];
     }
 }
