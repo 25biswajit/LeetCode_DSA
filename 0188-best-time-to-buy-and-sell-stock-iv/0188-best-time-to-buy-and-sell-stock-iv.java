@@ -1,30 +1,31 @@
 class Solution {
-    public int maxProfit(int p, int[] prices) {
+    int dp[][][] = null;
+    public int maxProfit(int k, int[] prices) {
         int n = prices.length;
-        int dp[][][] = new int[n][p+1][2];
-
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < p+1; j++){
-                for(int k = 0; k < 2; k++){
-                    dp[i][j][k] = -1;
-                }
-            }   
-        }
-
-        return maxProfit(p, 0, n, 0, prices, dp);
+        dp = new int[n][2][k+1];
+        fill(dp, n, 2, k+1);
+        return trade(k, prices, 0, 1); // flag 1 = Buy, 0 = sell
     }
 
-    int maxProfit(int k, int i, int n, int flag, int[] a, int[][][] dp) {
-        if (i == n || k == 0) return 0;
-        if (dp[i][k][flag] != -1) return dp[i][k][flag];
-        int noAction = 0, take = 0;
-        if (flag == 0) {// buy
-            take = -a[i] + maxProfit(k, i + 1, n, 1, a, dp);
-        } 
-        else if (flag == 1) {// sell
-            take = a[i] + maxProfit(k - 1, i + 1, n, 0, a, dp);
+    private int trade(int k, int[] a, int i, int flag){
+        int n = a.length;
+        if(i >= n || k == 0) return 0;
+
+        if(dp[i][flag][k] != -1) return dp[i][flag][k];
+
+        int noaction = trade(k, a, i+1, flag);
+        int action = flag == 1 ? trade(k, a, i+1, 0) - a[i] : trade(k - 1, a, i+1, 1) + a[i];
+        int result = Integer.max(noaction, action);
+        return dp[i][flag][k] = result;
+    }
+
+    private void fill(int[][][] dp, int x, int y, int z){
+        for(int i = 0; i < x; i++){
+            for(int j = 0; j < y; j++){
+                for(int k = 0; k < z; k++){
+                    dp[i][j][k] = -1;
+                }
+            }
         }
-        noAction = maxProfit(k, i + 1, n, flag, a, dp);
-        return dp[i][k][flag] = Integer.max(noAction, take);
     }
 }
