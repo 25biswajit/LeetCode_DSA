@@ -1,25 +1,26 @@
 class Solution {
-    public boolean wordBreak(String s, List<String> dic) {
+    Map<String, Boolean> map = null;
+    Set<String> set = null;
+    public boolean wordBreak(String s, List<String> wordDict) {
         int n = s.length();
-        Map<String, Boolean> dp = new HashMap<>();
-        return wordBreak(s, dic, dp);
+        set = new HashSet<String>(wordDict);
+        map = new HashMap<>();
+        return solve(s);
     }
 
-    private boolean wordBreak(String s ,List<String> dic, Map<String, Boolean> dp){
+    private boolean solve(String s){
+        boolean result = false;
         int n = s.length();
         if(n == 0) return true;
-        if(dp.containsKey(s)) return dp.get(s);
-        boolean result = false;
+        if(map.containsKey(s)) return map.get(s);
         for(int i = 1; i <= n; i++){
-            String substring = s.substring(0, i);
-            String rest = s.substring(i);
-            if( dic.contains(substring) && wordBreak(rest, dic, dp)){
-                result = true;
-                break;
+            String prefix = s.substring(0, i);
+            String suffix = s.substring(i);
+            if(set.contains(prefix) && solve( suffix )){
+                result = true;  
             }
+            map.put(s, result);
         }
-        dp.put(s, result);
         return result;
     }
-
 }
