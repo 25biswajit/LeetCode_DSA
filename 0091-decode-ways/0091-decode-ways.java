@@ -1,29 +1,30 @@
 class Solution {
+    Map<String, Integer> map = null;
     public int numDecodings(String s) {
-        Map<String, Integer> map = new HashMap<>();
-        return count(s, map);
+        map = new HashMap<>();
+        return ways(s);
     }
 
-    private int count(String s, Map<String, Integer> map){
+    private int ways(String s){
         int n = s.length();
-        if( n == 0 ) return 1;
-        if( s.startsWith("0") ) return 0;
-        if( map.containsKey(s) ) return map.get(s);
-        
-        int result = count(s.substring(1), map);
+        if(n == 0) return 1;
+        if(s.charAt(0)=='0') return 0;
+        if(map.containsKey(s)) return map.get(s);
 
-        if(n >= 2){
-            String two = s.substring(0, 2);
-            if(valid(two)){
-                result += count(s.substring(2), map);
+        int result = 0;
+        String s1 = s.substring(0,1);
+        result += ways(s.substring(1));
+
+        String s2 = null;
+        if(n > 1){
+            s2 = s.substring(0,2);
+            int num = Integer.parseInt(s2);
+            if(num <= 26){
+                result += ways(s.substring(2));
             }
         }
-        
+
         map.put(s, result);
         return result;
-    }
-
-    private boolean valid(String s){
-        return !(Integer.parseInt(s) > 26);
     }
 }
