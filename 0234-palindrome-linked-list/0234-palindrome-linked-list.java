@@ -19,7 +19,7 @@ class Solution {
             slow = slow.next;
         }
 
-        // even length
+        // odd length
         if(fast != null){
             slow = slow.next;
         }
