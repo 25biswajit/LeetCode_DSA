@@ -1,74 +1,63 @@
 class Solution {
-    public int largestRectangleArea(int[] h) {
-        int n = h.length;
-        int[] nse = nextSmall(h);
-        Arrays.stream(nse).forEach(x -> System.out.print(x +","));
-        int[] pse = prevSmall(h);
-        System.out.println();
-        Arrays.stream(pse).forEach(x -> System.out.print(x +","));
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] nsi = new int[n];
+        int[] psi = new int[n];
+        Arrays.fill(psi, -1);
+        Arrays.fill(nsi, n);
+        prepareNextSmallerIndex(heights, nsi);
+        preparePrevSmallerIndex(heights, psi);
         int max = 0;
-        for(int i = 0; i < n; i++){
-            max = Integer.max( max, h[i] * (nse [i] - pse[i] - 1));
+        for(int i = 0; i < n ;i++){
+            int len = nsi[i] - psi[i] - 1;
+            int bre = heights[i];
+            int area = len * bre;
+            max = Integer.max(max, area);
         }
         return max;
     }
 
-    private int[] prevSmall(int[] h){
-        int n = h.length;
-        int[] pse = new int[n];
-        Arrays.fill(pse, -1);
+    private void prepareNextSmallerIndex(int[] h, int[] nsi){
         Stack<Integer> stack = new Stack<>();
-        stack.push(0);
-        int i = 1;
-        while(i < n){
-            if(!stack.isEmpty()){
-                if( h[i] > h[stack.peek()] ){
-                    pse[i] = stack.peek();
-                    stack.push(i);
-                    i++;
-                }
-                else{
-                    while(!stack.isEmpty() && h[i] <= h[stack.peek()] ){
-                        stack.pop();
-                    }
-                }
-            }else{
-                stack.push(i);
-                i++;
-            }
-        }
-        return pse;
-    }
-
-    private int[] nextSmall(int[] h){
         int n = h.length;
-        int[] nse = new int[n];
-        Arrays.fill(nse, n);
-        Stack<Integer> stack = new Stack<>();
-        stack.push(n-1);
-        int i = n-2;
-        while(i >= 0){
-            if(!stack.isEmpty()){
-                if( h[i] > h[stack.peek()] ){
-                    nse[i] = stack.peek();
+        int i = n -1;
+        while(i >=0){
+            if(stack.isEmpty()){ stack.push(i); i--;}
+            //stack not Empty()
+            else{
+                int top = h[stack.peek()];
+                if(top < h[i]) {
+                    nsi[i] = stack.peek();
                     stack.push(i);
                     i--;
-                }
-                else{
-                    while(!stack.isEmpty() && h[i] <= h[stack.peek()] ){
+                }else{
+                    while(!stack.isEmpty() && h[stack.peek()] >= h[i]){
                         stack.pop();
                     }
                 }
-            }else{
-                stack.push(i);
-                i--;
             }
         }
-        return nse;
+    }
+
+    private void preparePrevSmallerIndex(int[] h, int[] psi){
+        Stack<Integer> stack = new Stack<>();
+        int n = h.length;
+        int i = 0;
+        while(i < n){
+            if(stack.isEmpty()){ stack.push(i); i++;}
+            //stack not Empty()
+            else{
+                int top = h[stack.peek()];
+                if(top < h[i]) {
+                    psi[i] = stack.peek();
+                    stack.push(i);
+                    i++;
+                }else{
+                    while(!stack.isEmpty() && h[stack.peek()] >= h[i]){
+                        stack.pop();
+                    }
+                }
+            }
+        }
     }
 }
-
-//     2,1,5,6,2,3
-//pse. -,-,1,5,1,2  
-//nse. 1,6,2,2,6,6
-// stack : 2
