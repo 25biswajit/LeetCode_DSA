@@ -12,7 +12,7 @@ class Solution {
 
         Map<Integer, Integer> map = new HashMap<>();
 
-        int left = 0, right = 0;
+        int left = 0, right = 0, server = 0;
         for(int i = 0; i < q; i++){
             int startTime = sortedQueries[i][1] - x;
             int endTime = sortedQueries[i][1];
