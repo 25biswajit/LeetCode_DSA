@@ -1,38 +1,30 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        List<int[]> result = new ArrayList<>();
+        Arrays.sort(intervals, (a,b) -> a[0]==b[0] ? a[1]-b[1] : a[0]-b[0]);
         int n = intervals.length;
-        if(n == 1) return intervals;
+        int[] curr = intervals[0];
+        List<int[]> list = new ArrayList<>();
+        for(int i = 1; i < n; i++){
+            int[] temp = intervals[i];
 
-        Arrays.sort(intervals, (a,b) -> {
-            if(a[0] == b[0]) return a[1] - b[1];
-            else return a[0] - b[0];
-        });
-
-        int current_start = intervals[0][0];
-        int current_end = intervals[0][1];
-        result.add(new int[]{current_start, current_end});
-
-        for(int i = 0; i < n; i++){
-            if(current_end >= intervals[i][0]){
-                current_end = Math.max(current_end, intervals[i][1]);
-                int curr[] = result.get(result.size()-1);
-                curr[1] = current_end;
+            //CASE 1 - Curr Before Temp
+            if(curr[1] < temp[0]){
+                list.add(curr);
+                curr = temp;
             }
-            else if(current_end < intervals[i][0]){
-                result.add(intervals[i]);
-                current_start = intervals[i][0];
-                current_end = intervals[i][1];
+            //Case 2 - After - NP
+
+            //Case 3 - Overlap
+            else{
+                curr[0] = Integer.min(curr[0], temp[0]);
+                curr[1] = Integer.max(curr[1], temp[1]);
             }
         }
-
-        int[][] out = new int[result.size()][2];
-        int i = 0;
-        for(int[] arr : result){
-            out[i] = arr;
-            i++;
+        list.add(curr);
+        int[][] result = new int[list.size()][];
+        for(int i = 0; i < list.size();i++){
+            result[i] = list.get(i);
         }
-
-        return out;
+        return result;
     }
 }
