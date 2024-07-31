@@ -10,13 +10,18 @@ class Solution {
 
     int minDistance(String s1, String s2, int i, int j){
         if(i < 0 && j < 0) return 0;
+        // source word is smaller than target word
         if(i < 0 && j >= 0) return j+1;
+        // target word is smaller than source word
         if(j < 0 && i >= 0) return i+1;
+        
         if(dp[i][j] != -1) return dp[i][j];
 
+        // both having same char no operation required
         if(s1.charAt(i)==s2.charAt(j)) {
             dp[i][j] = minDistance(s1, s2, i-1, j-1);
         }
+        // both having diff char apply insert, delete, replace and pick min
         else{
             int insert = 1 + minDistance(s1, s2, i, j-1);
             int delete = 1 + minDistance(s1, s2, i-1, j);
