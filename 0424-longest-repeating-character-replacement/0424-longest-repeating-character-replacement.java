@@ -8,7 +8,7 @@ class Solution {
             arr[ch - 'A']++;
             maxFrq = Integer.max( maxFrq, arr[ch - 'A']);
             
-            if(j - i + 1 - maxFrq > k){
+            while(j - i + 1 - maxFrq > k){
                 ch = s.charAt(i);
                 arr[ch - 'A']--;
                 i++;
