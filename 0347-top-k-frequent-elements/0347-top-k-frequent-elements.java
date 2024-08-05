@@ -6,6 +6,9 @@ class Solution {
 
         for(int i : nums){
             map.put(i, map.getOrDefault(i,0)+1);
+        }
+
+        for(Integer i : map.keySet()){
             pq.add(new int[]{ i, map.get(i)});
             if(pq.size() > k) {
                 pq.poll();
