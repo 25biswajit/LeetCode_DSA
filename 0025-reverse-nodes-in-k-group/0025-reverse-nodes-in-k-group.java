@@ -9,30 +9,33 @@
  * }
  */
 class Solution {
-    public ListNode reverseKGroup(ListNode node, int k){
-        if(node == null) return null;
-        ListNode reverseHead = null, nextNode = null, head = node;
-        int k_ = k;
-        if(!isValidLength(node, k)) return node; 
-        while(node!=null && k > 0){
-            nextNode = node.next;
-            node.next = reverseHead;
-            reverseHead = node;
-            node = nextNode;
-            k--;
-        }
-        ListNode tail = reverseKGroup(node, k_);
-        head.next = tail;
-        return reverseHead;
+    public ListNode reverseKGroup(ListNode head, int k) {
+        return reverseK(head, k);
     }
 
-    private boolean isValidLength(ListNode node, int k){
-        ListNode temp = node;
-        int size = 0;
-        while(temp!=null && size <= k){
-            temp = temp.next;
-            size++;
+    ListNode reverseK(ListNode head, int k) {
+        if(head == null) return null;
+        if(!isValid(head,k)) return head;
+        int k_ = k;
+        ListNode temp = head;
+        ListNode rHead = null;
+        while(temp!=null && k > 0){
+            ListNode tempNext = temp.next;
+            temp.next = rHead;
+            rHead = temp;
+            temp = tempNext;
+            k--;
         }
-        return size >= k;
+        ListNode rHead_ = reverseK(temp, k_);
+        head.next = rHead_;
+        return rHead;
+    }
+
+    boolean isValid(ListNode node, int k){
+        while(node!=null && k > 0){
+            node = node.next;
+            k--;
+        }
+        return k == 0;
     }
 }
