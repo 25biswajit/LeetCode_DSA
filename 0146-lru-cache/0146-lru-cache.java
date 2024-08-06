@@ -1,56 +1,74 @@
-class LRUCache {
-    HashMap<Integer, Node> map = null;
-    Node head = null, tail = null;
-    // head for new node , tail is for older
+public class LRUCache {
+    Map<Integer,Node> map;
+    Node front;
+    Node back;
     int capacity;
-
     public LRUCache(int capacity) {
         this.capacity = capacity;
         this.map = new HashMap<>();
-        head = new Node(-1, -1);
-        tail = new Node(-1, -1);
-        head.next = tail;
-        tail.prev = head;
+        front = new Node(-1, -1);
+        back = new Node(-1, -1);
+        front.next = back;
+        back.prev = front;
     }
-    
+
     public int get(int key) {
-        if(map.containsKey(key)) {
-            Node old = map.get(key);
-            Node newNode = new Node(old.k, old.v);
-            remove(old);
-            add(newNode);
-            return newNode.v;
+        int val = -1;
+        if(map.containsKey(key)){
+            Node node = map.get(key);
+            deleteNode(node);
+            addAtBack(back, node);
+            val = node.data.v;
         }
-        return -1;
+        return val;
+
     }
-    
+
+    private void addAtBack(Node back, Node nodeToBeAdded) {
+        nodeToBeAdded.prev = back.prev;
+        nodeToBeAdded.next = back;
+        back.prev.next = nodeToBeAdded;
+        back.prev = nodeToBeAdded;
+        map.put(nodeToBeAdded.data.k, nodeToBeAdded);
+    }
+
+    private void deleteNode(Node node) {
+        map.remove(node.data.k);
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
     public void put(int key, int value) {
-        if(map.size() == capacity){
-            remove(tail.prev);
+        if(map.containsKey(key)){
+            Node node = map.get(key);
+            deleteNode(node);
         }
-        Node node = null;
-        if(map.containsKey(key)) {
-            remove(map.get(key));
+        if (map.size() == capacity) {
+            deleteNode(front.next);
         }
-        Node newNode = new Node(key,value);
-        add(newNode);
+        Node newEntry = new Node(key, value);
+        addAtBack(back, newEntry);
     }
+}
 
-    private void add(Node node){
-        Node hn = head.next;
-        node.prev = head;
-        node.next = hn;
-        hn.prev = node;
-        head.next = node;
-        map.put(node.k, node);
+class Data{
+    int k;
+    int v;
+    Data(int k, int v){
+        this.k = k;
+        this.v = v;
     }
+}
 
-    private void remove(Node node){
-        Node np = node.prev;
-        Node nn = node.next;
-        np.next = nn;
-        nn.prev = np;
-        map.remove(node.k);
+class Node {
+    Node prev;
+    Node next;
+    Data data;
+
+    Node(int k, int v){
+        this.data = new Data(k,v);
+        this.prev = null;
+        this.next = null;
     }
 }
 
@@ -60,16 +78,3 @@ class LRUCache {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
-
-class Node{
-    int k;
-    int v;
-    Node prev;
-    Node next;
-
-    public Node(int k, int v) {
-        this.v = v;
-        this.k = k;
-        this.prev = this.next = null;
-    }
-}    
