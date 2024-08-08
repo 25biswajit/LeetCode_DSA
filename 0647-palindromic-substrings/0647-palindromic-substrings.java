@@ -1,19 +1,20 @@
 class Solution {
-    boolean[][] dp = null;
+    int count;
     public int countSubstrings(String s) {
-        int n = s.length(), count = 0;
-        dp = new boolean[n][n];
-        for(int len = 1; len <= n; len++){
-            for(int i = 0; i + len <= n; i++){
-                int j = i + len - 1;
-                boolean flag = s.charAt(i)==s.charAt(j);
-                // len 1 & 2
-                if(len <= 2) dp[i][j] = flag;
-                else dp[i][j] = dp[i+1][j-1] && flag;
-
-                if(dp[i][j]) count++;
-            }
+        char[] arr = s.toCharArray();
+        int n = s.length();
+        for(int i = 0; i < n; i++){
+            expand(arr,i,i,n);
+            expand(arr,i,i+1,n);
         }
         return count;
+    }
+
+    void expand(char[] a, int i, int j, int n){
+        while(i >= 0 && j < n && a[i] == a[j]){
+            count++;
+            i--;
+            j++;
+        }
     }
 }
