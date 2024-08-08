@@ -1,40 +1,25 @@
 class Solution {
     public String longestPalindrome(String s) {
+        char[] arr = s.toCharArray();
         int n = s.length();
-        String ans = "";
+        String ans1,ans2,ans,palStr = "";
         for(int i = 0; i < n; i++){
-            String odd = helper(s, i, i);
-            String even = helper(s, i, i+1);
-            if( odd.length() > even.length()){
-                if( odd.length() > ans.length()) ans = odd;
-            }
-            else{
-                if( even.length() > ans.length()) ans = even;
-            }
+            ans1 = expand(arr,i,i,n);
+            ans2 = expand(arr,i,i+1,n);
+            ans = ans1.length() > ans2.length() ? ans1: ans2;
+            palStr = ans.length() > palStr.length() ? ans : palStr;
         }
-        return ans;
+        return palStr;
     }
 
-    String helper(String s, int l, int r){
-        int n = s.length();
+    String expand(char[] a, int i, int j, int n){
         String ans = "";
-        while(l >= 0 && r < n){
-            char c1 = s.charAt(l);
-            char c2 = s.charAt(r);
-            if(c1 == c2){
-                //odd
-                if(l == r){
-                    ans = c1 + ans;
-                }
-                else {
-                    ans = c1 + ans + c2;
-                }
-                l--;
-                r++;
-            }else{
-                break;
-            }
+        while(i >= 0 && j < n && a[i] == a[j]){
+            if(i == j) ans += a[i];
+            else ans = a[i] + ans + a[j];
+            i--;
+            j++;
         }
-        return ans; 
+        return ans;
     }
 }
