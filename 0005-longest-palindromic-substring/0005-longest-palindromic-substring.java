@@ -1,25 +1,30 @@
 class Solution {
     public String longestPalindrome(String s) {
-        char[] arr = s.toCharArray();
         int n = s.length();
-        String ans1,ans2,ans,palStr = "";
-        for(int i = 0; i < n; i++){
-            ans1 = expand(arr,i,i,n);
-            ans2 = expand(arr,i,i+1,n);
-            ans = ans1.length() > ans2.length() ? ans1: ans2;
-            palStr = ans.length() > palStr.length() ? ans : palStr;
+        boolean[][] dp = new boolean[n][n];
+        int maxLength = 1;  // Length of the longest palindrome found
+        int start = 0;      // Start index of the longest palindrome
+        
+        for (int len = 1; len <= n; len++) {
+            for (int i = 0; i + len <= n; i++) {
+                int j = i + len - 1;
+                boolean flag = s.charAt(i) == s.charAt(j);
+                
+                // For substrings of length 1 and 2
+                if (len <= 2) {
+                    dp[i][j] = flag;
+                } else {
+                    dp[i][j] = dp[i + 1][j - 1] && flag;
+                }
+                
+                // If it's a palindrome and longer than the previous found
+                if (dp[i][j] && len > maxLength) {
+                    start = i;
+                    maxLength = len;
+                }
+            }
         }
-        return palStr;
-    }
-
-    String expand(char[] a, int i, int j, int n){
-        String ans = "";
-        while(i >= 0 && j < n && a[i] == a[j]){
-            if(i == j) ans += a[i];
-            else ans = a[i] + ans + a[j];
-            i--;
-            j++;
-        }
-        return ans;
+        
+        return s.substring(start, start + maxLength);
     }
 }
