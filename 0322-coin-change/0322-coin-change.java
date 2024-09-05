@@ -1,25 +1,23 @@
 class Solution {
     int[][] dp = null;
-    public int coinChange(int[] coins, int amount) {
-        int n = coins.length;
-        if(amount == 0) return 0; 
-        dp = new int[n][amount+1];
-        Arrays.stream(dp).forEach(d -> Arrays.fill(d, -1));
-        int result = solve(coins, n, amount, 0);
-        return result >= Integer.MAX_VALUE-1 ? -1 : result;
+    public int coinChange(int[] c, int k) {
+        int n = c.length;
+        dp = new int[n+1][k+1];
+        Arrays.stream(dp).forEach(d -> Arrays.fill(d,-1));
+        int ans = coin(c, 0, k);
+        return ans >= Integer.MAX_VALUE - 1 ? -1 : ans;
     }
 
-    private int solve(int[] coins, int n, int amount, int i){
-        if(amount == 0) return 0;
+    int coin(int[] c, int i, int k){
+        int n = c.length;
+        if(k == 0) return 0;
         if(i >= n) return Integer.MAX_VALUE-1;
-        if(dp[i][amount] != -1) return dp[i][amount];
-
+        if(dp[i][k] != -1) return dp[i][k];
         int take = Integer.MAX_VALUE-1;
-        if(coins[i] <= amount){
-            take = solve(coins, n, amount - coins[i], i) + 1;
+        if(k >= c[i]){
+            take = 1 + coin(c, i, k - c[i]);
         }
-        int leave = solve(coins, n, amount, i+1);
-        int result = Integer.min(take, leave); 
-        return dp[i][amount] = result;
+        int leave = coin(c, i+1, k);
+        return dp[i][k] = Integer.min(take, leave);
     }
 }
