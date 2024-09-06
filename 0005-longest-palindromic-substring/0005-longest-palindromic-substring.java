@@ -1,28 +1,31 @@
 class Solution {
+    private int start;
+    private int maxLength;
+
     public String longestPalindrome(String s) {
-        String result = "", temp = "", odd = "", even = "";
         int n = s.length();
-        for(int i = 0; i < n; i++){
-            even = expand(s, i, i+1);
-            odd = expand(s, i, i);
-            temp = even.length() > odd.length() ? even : odd;
-            result = result.length() > temp.length() ? result : temp;
+        if (n < 2) return s;
+
+        char[] arr = s.toCharArray();
+        for (int i = 0; i < n; i++) {
+            // Check for odd-length palindromes centered at i
+            expand(arr, i, i, n);
+            // Check for even-length palindromes centered between i and i+1
+            expand(arr, i, i + 1, n);
         }
-        return result;
+
+        return s.substring(start, start + maxLength);
     }
 
-    public String expand(String s, int i, int j){
-        int n = s.length();
-        String ans = "";
-        while(i>=0 && j<n && s.charAt(i)==s.charAt(j)){
-            if(i==j){
-                ans = s.charAt(i) + ans; 
-            }else{
-                ans = s.charAt(i) + ans + s.charAt(j);
+    private void expand(char[] arr, int i, int j, int n) {
+        while (i >= 0 && j < n && arr[i] == arr[j]) {
+            int currentLength = j - i + 1;
+            if (currentLength > maxLength) {
+                start = i;
+                maxLength = currentLength;
             }
             i--;
             j++;
         }
-        return ans;
     }
 }
