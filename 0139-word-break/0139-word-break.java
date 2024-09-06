@@ -17,6 +17,7 @@ class Solution {
             String suffix = s.substring(i);
             if(set.contains(prefix) && solve(suffix)){
                 dp.put(s, true);
+                break;
             }
         }
         dp.putIfAbsent(s, false);
