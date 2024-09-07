@@ -13,27 +13,28 @@ class Solution {
         return reverseK(head, k);
     }
 
-    ListNode reverseK(ListNode head, int k) {
-        if(head == null) return null;
-        if(!isValid(head,k)) return head;
+    ListNode reverseK(ListNode head, int k){
         int k_ = k;
-        ListNode temp = head;
-        ListNode rHead = null;
+        //base cond
+        if(head == null || !isValid(head, k)) return head;
+
+        ListNode temp = head, rHead = null, tmpNxt = null;
         while(temp!=null && k > 0){
-            ListNode tempNext = temp.next;
+            tmpNxt = temp.next;
             temp.next = rHead;
             rHead = temp;
-            temp = tempNext;
+            temp = tmpNxt;
             k--;
         }
         ListNode rHead_ = reverseK(temp, k_);
         head.next = rHead_;
+
         return rHead;
     }
 
-    boolean isValid(ListNode node, int k){
-        while(node!=null && k > 0){
-            node = node.next;
+    boolean isValid(ListNode head, int k){
+        while(head!=null && k > 0){
+            head = head.next;
             k--;
         }
         return k == 0;
