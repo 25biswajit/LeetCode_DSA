@@ -1,74 +1,52 @@
-public class LRUCache {
-    Map<Integer,Node> map;
-    Node front;
-    Node back;
-    int capacity;
+class LRUCache {
+    int limit = 0;
+    Node start = null, end = null;
+    HashMap<Integer, Node> map = null;
     public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.map = new HashMap<>();
-        front = new Node(-1, -1);
-        back = new Node(-1, -1);
-        front.next = back;
-        back.prev = front;
+        map = new HashMap<>();
+        limit = capacity;
+        start = new Node(-1,-1);
+        end = new Node(-1,-1);
+        start.next = end;
+        end.prev = start;
     }
-
+    
     public int get(int key) {
-        int val = -1;
-        if(map.containsKey(key)){
-            Node node = map.get(key);
-            deleteNode(node);
-            addAtBack(back, node);
-            val = node.data.v;
-        }
-        return val;
-
+        if(!map.containsKey(key)) return -1;
+        Node node = map.get(key);
+        Node newNode = new Node(node.k, node.v);
+        delete(node);
+        add(newNode);
+        return newNode.v;
     }
-
-    private void addAtBack(Node back, Node nodeToBeAdded) {
-        nodeToBeAdded.prev = back.prev;
-        nodeToBeAdded.next = back;
-        back.prev.next = nodeToBeAdded;
-        back.prev = nodeToBeAdded;
-        map.put(nodeToBeAdded.data.k, nodeToBeAdded);
-    }
-
-    private void deleteNode(Node node) {
-        map.remove(node.data.k);
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-    }
-
+    
     public void put(int key, int value) {
-        if(map.containsKey(key)){
+        if(map.containsKey(key)) {
             Node node = map.get(key);
-            deleteNode(node);
+            delete(node);
         }
-        if (map.size() == capacity) {
-            deleteNode(front.next);
+        Node newNode = new Node(key, value);
+        if(map.size() == limit){
+            delete(end.prev);
         }
-        Node newEntry = new Node(key, value);
-        addAtBack(back, newEntry);
+        add(newNode);
+        
     }
-}
 
-class Data{
-    int k;
-    int v;
-    Data(int k, int v){
-        this.k = k;
-        this.v = v;
+    void delete(Node node){
+        map.remove(node.k);
+        Node prevNd = node.prev;
+        Node nextNd = node.next;
+
+        prevNd.next = nextNd;
+        nextNd.prev = prevNd;
     }
-}
-
-class Node {
-    Node prev;
-    Node next;
-    Data data;
-
-    Node(int k, int v){
-        this.data = new Data(k,v);
-        this.prev = null;
-        this.next = null;
+    void add(Node node){
+        start.next.prev = node;
+        node.next = start.next;
+        node.prev = start;
+        start.next = node;
+        map.put(node.k, node);
     }
 }
 
@@ -78,3 +56,15 @@ class Node {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
+
+class Node{
+    Node prev;
+    Node next;
+    int k;
+    int v; 
+
+    Node(int k, int v){
+        this.k = k;
+        this.v = v;
+    }
+} 
