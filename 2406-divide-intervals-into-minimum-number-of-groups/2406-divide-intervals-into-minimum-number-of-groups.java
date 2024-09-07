@@ -1,6 +1,5 @@
 class Solution {
     public int minGroups(int[][] intervals) {
-        //Arrays.sort( intervals, (a,b)->a[0]-b[0]);
 
         List<Interval> list = new ArrayList<>();
         for(int[] p : intervals){
