@@ -10,10 +10,6 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-        return reverseK(head, k);
-    }
-
-    ListNode reverseK(ListNode head, int k){
         int k_ = k;
         //base cond
         if(head == null || !isValid(head, k)) return head;
@@ -26,7 +22,7 @@ class Solution {
             temp = tmpNxt;
             k--;
         }
-        ListNode rHead_ = reverseK(temp, k_);
+        ListNode rHead_ = reverseKGroup(temp, k_);
         head.next = rHead_;
 
         return rHead;
