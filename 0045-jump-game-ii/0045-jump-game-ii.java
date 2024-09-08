@@ -1,14 +1,15 @@
 class Solution {
     public int jump(int[] a) {
-        int left = 0, right = 0, maxReach = 0, n = a.length, jump = 0;
-
-        while(right < n-1){
-            for(int i = left; i <= right; i++){
-                maxReach = Integer.max(maxReach, a[i] + i);
+        int n = a.length;
+        int i = 0, maxreach = 0, reach = 0, jump = 0;
+        while(i < n-1){
+            reach = Integer.max( reach , a[i] + i);
+            if(i == maxreach){
+                maxreach = reach;
+                jump++;
+                if(maxreach > n) return jump;
             }
-            left = right + 1;
-            right = maxReach;
-            jump++;
+            i++;
         }
         return jump;
     }
